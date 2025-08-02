@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File System</title>
+    <meta name="description" content="Web service API and a JavaScript SPA app that allows users to query the contents of a directory on the server.">
+    <link href="/styles/styles.css" rel="stylesheet"/>
+    <script type="module" src="/js/app.js"></script>
+</head>
+<body>
+    <section id="breadcrumb">
+        <div id="desktopIcon"></div>
+        <div id="breadcrumbTrail"></div>
+    </section>
+    <section id="actionsBar">
+        <div id="newFolder" title="New Folder" class="fileOperationsIcon"></div>
+        <div id="fileOperations">
+            <div id="rename" title="Rename" class="fileOperationsIcon disabled"></div>
+            <div id="delete" title="Delete" class="fileOperationsIcon disabled"></div>
+            <div id="cut" title="Cut" class="fileOperationsIcon disabled"></div>
+            <div id="copy" title="Copy" class="fileOperationsIcon disabled"></div>
+            <div id="paste" title="Paste" class="fileOperationsIcon disabled"></div>
+        </div>
+        <div id="serverActions">
+            <div id="download" title="Download File" class="fileOperationsIcon disabled"></div>
+            <div id="upload" title="Upload File" class="fileOperationsIcon"></div>
+            <input type="file" id="fileInput" style="display: none;"> 
+        </div>
+        <input type="text" placeholder="Search Documents" id="searchBar"/>
+        <div id="loading" class="hidden">Searching...</div>
+    </section>
+    <section class="tableContainer">
+        <table class="folderItems">
+            <thead>
+                <th>Name</th>
+                <th class="searchHeader">Path</th>
+                <th class="folderItemsHeader">Size</th>
+                <th class="folderItemsHeader">Type</th>
+                <th class="folderItemsHeader">Last Modified</th>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <div id="error" class="hidden">Couldn't find anything. <a id="homeLink">Go home?</a></div>
+    </section>
+</body>
+</html>
