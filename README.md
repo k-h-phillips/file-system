@@ -56,6 +56,7 @@ The scope of the project was limited, but if more time were available, here are 
     * Allow copy/paste of folders instead of just files (currently only cut/paste supported)
     * Keyboard copy/cut/paste/delete
     * Create file
+    * Allow drag/drop for file/folder moves
 * UI
     * Accessibility (keyboard navigation, screen reader help, etc.)
     * Better loading indicators
