@@ -21,7 +21,7 @@ Create a web service API and a JavaScript SPA app that allows users to query the
 * All UI work should be client side with JavaScript, no HTML should be rendered server side
 * No third party plugins, keep framework usage to a minimum (Knockout, jQuery and jQueryUI are OK but not required)
 
-## Solution :check_mark_button:
+## Solution ✔️:
 ### Features :sparkles:
 * SPA JavaScript front end with no reloading
 * .NET Web API to handle file system requests from the front end
