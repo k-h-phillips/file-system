@@ -7,6 +7,7 @@ window.addEventListener("popstate", FileExplorer.renderFolder);
 // Configure event listeners for file explorer and search.
 document.getElementById("download").onclick = FileExplorer.downloadFile;
 document.getElementById("upload").onclick = FileExplorer.handleUploadClick;
+document.getElementById("fileInput").addEventListener("change", FileExplorer.uploadFile);
 document.getElementById("delete").onclick = FileExplorer.deleteFile;
 document.getElementById("rename").onclick = FileExplorer.handleRenameClick;
 document.getElementById("copy").onclick = FileExplorer.addItemToClipboard.bind(this, FileExplorer.copyFile);

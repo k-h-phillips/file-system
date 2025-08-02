@@ -231,17 +231,15 @@ export class FileExplorer {
      */
     static handleUploadClick() {
         // Open the file upload dialog.
-        const fileInput = document.getElementById("fileInput");
-        fileInput.click();
-
-        // Listen for file upload.
+        const fileInput = document.getElementById("fileInput")
+        document.getElementById("fileInput").click();
         fileInput.addEventListener("change", FileExplorer.uploadFile);
     }
 
     /**
      * Upload the file to the server.
      */
-    static async uploadFile() {
+    static async uploadFile(event) {
         const selectedFiles = this.files;
         if (selectedFiles.length > 0) {
             try {
@@ -267,6 +265,7 @@ export class FileExplorer {
                 console.error("Error uploading file: ", error);
             }
         }
+        event.target.value = null;
     }
 
     /**

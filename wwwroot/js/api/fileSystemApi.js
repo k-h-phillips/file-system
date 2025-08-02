@@ -16,7 +16,7 @@
  */ 
 const API_ENDPOINT = "/filesystem"
 
-function transformPath(path) {
+export const transformPath = (path) => {
     // Ensure the path does not start with a slash.
     if (path.charAt(0) === "/") {
         path = path.substring(1);

@@ -4,6 +4,7 @@
  * Provides methods to render the folder information and navigate to a folder.
  */
 import { FileExplorer } from "./fileExplorer.js";
+import { transformPath } from "../api/fileSystemApi.js";
 
 /**
  * A folder in the file explorer.
@@ -80,7 +81,7 @@ export class Folder {
      */
     static async navigateTo(fullPath) {
         // Navigate to the path. 
-        history.pushState(null, "", fullPath);
+        history.pushState(null, "", window.location.origin + "/" + transformPath(fullPath));
 
         // Re-render the file explorer.
         await FileExplorer.renderFolder();

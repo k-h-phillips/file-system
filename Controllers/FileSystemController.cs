@@ -68,13 +68,19 @@ namespace TestProject.Controllers
             foreach (string folder in folders)
             {
                 DirectoryInfo directoryInfo = new(folder);
-                children.Add(new Folder()
+                try
                 {
-                    Name = directoryInfo.Name,
-                    FullPath = Path.GetFullPath(folder)[_homePath.Length..],
-                    LastModified = directoryInfo.LastWriteTime,
-                    ItemCount = Directory.GetFileSystemEntries(folder).Length,
-                });
+                    children.Add(new Folder()
+                    {
+                        Name = directoryInfo.Name,
+                        FullPath = Path.GetFullPath(folder)[_homePath.Length..],
+                        LastModified = directoryInfo.LastWriteTime,
+                        ItemCount = Directory.GetFileSystemEntries(folder).Length,
+                    });
+                } catch (System.UnauthorizedAccessException)
+                {
+                    continue;
+                }
             }
 
             IEnumerable<string> files = Directory.EnumerateFiles(fullPath, "*", SearchOption.TopDirectoryOnly);
@@ -545,7 +551,15 @@ namespace TestProject.Controllers
             string pattern,
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            IEnumerable<string> files = Directory.EnumerateFiles(searchPath, pattern);
+            IEnumerable<string> files;
+            try
+            {
+                files = Directory.EnumerateFiles(searchPath, pattern);
+            } 
+            catch (UnauthorizedAccessException)
+            {
+                files = new List<string>();
+            }
             foreach (string file in files)
             {
                 if (cancellationToken.IsCancellationRequested)
@@ -585,7 +599,15 @@ namespace TestProject.Controllers
             Queue<string> queue,
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            IEnumerable<string> directories = Directory.EnumerateDirectories(directoryPath);
+            IEnumerable<string> directories;
+            try
+            {
+                directories = Directory.EnumerateDirectories(directoryPath);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                directories = new List<string>();
+            }
             foreach (string folder in directories)
             {
                 if (cancellationToken.IsCancellationRequested)
