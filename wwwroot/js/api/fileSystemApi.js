@@ -21,10 +21,8 @@ const API_ENDPOINT = "/filesystem"
  * @returns {string} - The transformed path.
  */
 export const transformPath = (path) => {
-    if (path.charAt(0) === "/") {
-        path = path.substring(1);
-    }
-    return decodeURIComponent(path);
+    const cleanedString = path.replace(/^[/\\]+/, '');
+    return decodeURIComponent(cleanedString);
 }
 
 /**

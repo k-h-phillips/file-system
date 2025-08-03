@@ -70,7 +70,7 @@ export class FileExplorer {
             const searchBar = document.getElementById("searchBar");
             searchBar.value = "";
             const folder = FileExplorer.getCurrentPath().split("/").at(-1);
-            searchBar.setAttribute("placeholder", `Search ${folder ? folder : "Documents"}`)
+            searchBar.setAttribute("placeholder", `Search ${folder ? decodeURIComponent(folder) : "Documents"}`)
             if (FileExplorer.EventSource) {
                 FileExplorer.EventSource.close();
                 FileExplorer.EventSource = null;
