@@ -138,7 +138,7 @@ export class FileExplorer {
             // Create a 'link' for each part of the path.
             const folderLink = document.createElement("div");
             folderLink.classList.add("breadcrumbPart");
-            folderLink.innerText = folder.replace(/%20/g, " "); // Replace URL encoded spaces with actual spaces.
+            folderLink.innerText = decodeURIComponent(folder);
             breadcrumbContainer.append(folderLink);
             breadcrumbContainer.append(document.createTextNode(" > "));
 

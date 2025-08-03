@@ -11,17 +11,20 @@
 /**
  * @constant API_ENDPOINT - The base endpoint for the file system API.
  * @type {string}
- * @default "/filesystem"
  * @description Base URL for all file system API requests.
  */ 
 const API_ENDPOINT = "/filesystem"
 
+/**
+ * Transforms a URL path by removing leading slashes and decoding URI components.
+ * @param {string} path 
+ * @returns {string} - The transformed path.
+ */
 export const transformPath = (path) => {
-    // Ensure the path does not start with a slash.
     if (path.charAt(0) === "/") {
         path = path.substring(1);
     }
-    return path.replace(/%20/g, " "); // Replace URL encoded spaces with actual spaces.
+    return decodeURIComponent(path);
 }
 
 /**
