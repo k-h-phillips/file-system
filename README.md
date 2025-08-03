@@ -1,6 +1,6 @@
 # File System :file_folder:
 ## Problem Assignment :pencil:
-### Objective 🎯:
+### Objective 🎯
 Create a web service API and a JavaScript SPA app that allows users to query the contents of a directory on the server.
 
 ### Requirements :clipboard:
