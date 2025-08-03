@@ -5,7 +5,7 @@
  * @requires FormData - For handling file uploads.
  * @requires URL - For creating object URLs for file downloads.
  * @requires EventSource - For handling server-sent events for search functionality.
- * @exports getItems, deleteItem, moveItem, copyFile, uploadItem, downloadItem, createFolder, search
+ * @exports getItems, deleteItem, moveItem, copyItem, uploadItem, downloadItem, createFolder, search
  */
 
 /**
@@ -100,7 +100,7 @@ export const moveItem = async (oldPath, newPath, force=false) => {
  * @returns {string} - A message indicating the result of the copy operation.
  * @throws {Error} - Throws an error if the HTTP request fails.
  */
-export const copyFile = async (oldPath, newPath, force=false) => {
+export const copyItem = async (oldPath, newPath, force=false) => {
     const response = await fetch(`${API_ENDPOINT}/copy`, {
         method: "POST",
         body: JSON.stringify({

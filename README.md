@@ -31,7 +31,7 @@ Create a web service API and a JavaScript SPA app that allows users to query the
 * File download
 * Rename files and folders, confirmation dialog on naming collisions
 * Delete files and folders, confirmation dialog
-* Copy/cut/paste files, confirmation dialog on naming collisions
+* Copy/cut/paste files and folders, confirmation dialog on naming collisions
 * Create a new folder, automatic name collision resolving
 * Search nested directories for files and folders matching a pattern
     * Search triggered by input
@@ -44,7 +44,7 @@ Create a web service API and a JavaScript SPA app that allows users to query the
 1. **Server side models**. Though C# provides `File` and `Directory` classes, the codebase provides its own `File` and `Folder` classes to cut down on the amount of data being passed from server to client and to more tightly control the interface. It also allows for more customization in the information being provided about each file system item. For example, the item count for each folder is provided, but that is not a value readily available in the C# `Directory` class.
 
 ### Running the solution :rocket:
-1. Open the project in Visual Studio Code or Visual Studio.
+1. Open the project in Visual Studio Code (used in development) or Visual Studio.
 1. Set the `FileSystem` > `Home` configuration variable in `appsettings.Development.json` to the folder that should be considered the home folder.
 1. Run the project.
 1. In the browser, browse, search, and manipulate the files. Then examine the files on the server to verify functionality.
@@ -53,10 +53,9 @@ Create a web service API and a JavaScript SPA app that allows users to query the
 The scope of the project was limited, but if more time were available, here are some items that could improve functionality, usabilitiy, and codebase management.
 * Features 
     * Batch upload, download, move, delete
-    * Allow copy/paste of folders instead of just files (currently only cut/paste supported)
     * Keyboard copy/cut/paste/delete
-    * Create file
     * Allow drag/drop for file/folder moves
+    * Create file
 * UI
     * Accessibility (keyboard navigation, screen reader help, etc.)
     * Better loading indicators
@@ -64,4 +63,4 @@ The scope of the project was limited, but if more time were available, here are 
     * Toast messages to indicate succesful operations
 * Codebase
     * Automated tests
-    * Error handling (more specific than just 500 errors)
+    * Robust error handling

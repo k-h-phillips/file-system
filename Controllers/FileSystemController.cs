@@ -347,7 +347,7 @@ namespace TestProject.Controllers
         }
 
         /// <summary>
-        /// Copies a file from one path to another.
+        /// Copies a file or folder from one path to another.
         /// </summary>
         /// <param name="moveBody">
         /// Specifications for the copy, including the old path, the new path,
@@ -364,14 +364,14 @@ namespace TestProject.Controllers
         /// POST /filesystem/copy
         /// </example>
         [HttpPost("copy")]
-        public IActionResult CopyFile([FromBody] MoveBody moveBody)
+        public IActionResult CopyItem([FromBody] MoveBody moveBody)
         {
             string fullOldPath = PrependHomeToPath(moveBody.OldPath);
             if (!fullOldPath.StartsWith(_homePath))
             {
                 return Forbid("Access denied");
             }
-            if (!System.IO.File.Exists(fullOldPath))
+            if (!System.IO.File.Exists(fullOldPath) && !Directory.Exists(fullOldPath))
             {
                 return NotFound("Specified old path not found");
             }
@@ -382,7 +382,7 @@ namespace TestProject.Controllers
             {
                 return Forbid("Access denied");
             }
-            if (!moveBody.Force && System.IO.File.Exists(fullNewPath))
+            if (!moveBody.Force && (System.IO.File.Exists(fullNewPath) || Directory.Exists(fullNewPath)))
             {
                 return Ok(new { Message = $"{moveBody.NewPath} already exists" });
             }
@@ -393,6 +393,30 @@ namespace TestProject.Controllers
                 if (System.IO.File.Exists(fullOldPath))
                 {
                     System.IO.File.Copy(fullOldPath, fullNewPath, moveBody.Force);
+                }
+                else if (Directory.Exists(fullOldPath))
+                {
+                    // Create the directory.
+                    Directory.CreateDirectory(fullNewPath);
+
+                    // Copy all files in the directory.
+                    foreach (string file in Directory.GetFiles(fullOldPath, "*", SearchOption.TopDirectoryOnly))
+                    {
+                        string destFile = Path.Combine(fullNewPath, Path.GetFileName(file));
+                        System.IO.File.Copy(file, destFile, moveBody.Force);
+                    }
+                    
+                    // Copy all subdirectories.
+                    foreach (string folder in Directory.GetDirectories(fullOldPath, "*", SearchOption.TopDirectoryOnly))
+                    {
+                        string destDir = Path.Combine(fullNewPath, Path.GetFileName(folder));
+                        CopyItem(new MoveBody
+                        {
+                            OldPath = folder,
+                            NewPath = Path.Combine(fullNewPath, Path.GetFileName(folder)),
+                            Force = moveBody.Force
+                        });
+                    }
                 }
                 return Ok(new { Message = "File moved" });
 

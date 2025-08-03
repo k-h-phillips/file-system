@@ -7,12 +7,12 @@ window.addEventListener("popstate", FileExplorer.renderFolder);
 // Configure event listeners for file explorer and search.
 document.getElementById("download").onclick = FileExplorer.downloadFile;
 document.getElementById("upload").onclick = FileExplorer.handleUploadClick;
-document.getElementById("fileInput").addEventListener("change", FileExplorer.uploadFile);
+document.getElementById("fileInput").onchange = FileExplorer.uploadFile;
 document.getElementById("delete").onclick = FileExplorer.deleteFile;
 document.getElementById("rename").onclick = FileExplorer.handleRenameClick;
-document.getElementById("copy").onclick = FileExplorer.addItemToClipboard.bind(this, FileExplorer.copyFile);
+document.getElementById("copy").onclick = FileExplorer.addItemToClipboard.bind(this, FileExplorer.copyItem);
 document.getElementById("cut").onclick = FileExplorer.addItemToClipboard.bind(this, FileExplorer.moveItem);
-document.getElementById("paste").onclick = FileExplorer.pasteFile;
+document.getElementById("paste").onclick = FileExplorer.pasteItem;
 document.getElementById("newFolder").onclick = FileExplorer.newFolder;
 document.getElementById("homeLink").onclick = async () => {
     history.replaceState(null, "", "/");

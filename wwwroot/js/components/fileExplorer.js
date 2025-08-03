@@ -1,7 +1,7 @@
 import { File } from "./file.js"
 import { Folder } from "./folder.js"
 import { 
-    copyFile, 
+    copyItem, 
     createFolder,
     deleteItem, 
     downloadItem,
@@ -179,17 +179,13 @@ export class FileExplorer {
         this.classList.add("selected");
         document.getElementById("rename").classList.remove("disabled");
         document.getElementById("delete").classList.remove("disabled");
+        document.getElementById("copy").classList.remove("disabled");
         document.getElementById("cut").classList.remove("disabled");
         
-        // If this is a file, enable download and copy operations.
-        const buttonsToToggle = [
-            document.getElementById("download"), 
-            document.getElementById("copy")
-        ]
-        buttonsToToggle.forEach(button => {
-            if(this.classList.contains("file")) button.classList.remove("disabled")
-            else button.classList.add("disabled");
-        })
+        // If this is a file, enable download operation.
+        const downloadButton = document.getElementById("download");
+        if(this.classList.contains("file")) downloadButton.classList.remove("disabled")
+        else downloadButton.classList.add("disabled");
     }
 
     /**
@@ -232,8 +228,7 @@ export class FileExplorer {
     static handleUploadClick() {
         // Open the file upload dialog.
         const fileInput = document.getElementById("fileInput")
-        document.getElementById("fileInput").click();
-        fileInput.addEventListener("change", FileExplorer.uploadFile);
+        fileInput.click();
     }
 
     /**
@@ -381,15 +376,15 @@ export class FileExplorer {
      * @param {string} oldPath - The original path of the item.
      * @param {string} newPath - The path to copy the item to.
      */
-    static async copyFile(oldPath, newPath) {
+    static async copyItem(oldPath, newPath) {
         try {
-            const message = await copyFile(oldPath, newPath);
+            const message = await copyItem(oldPath, newPath);
             if (message.includes("already exists")) {
                 const userConfirmedCopy = confirm(`"${newPath}" already exists. Replace it?`);
                 if (!userConfirmedCopy) {
                     return;
                 }
-                await copyFile(oldPath, newPath, true);
+                await copyItem(oldPath, newPath, true);
             }
         } catch (error) {
             console.error("Error pasting file: ", error);
@@ -424,7 +419,7 @@ export class FileExplorer {
     /**
      * Paste the file on the clipboard to the current location.
      */
-    static async pasteFile() {
+    static async pasteItem() {
         const folderPath = FileExplorer.getCurrentPath();
         const newPath = `${folderPath}/${FileExplorer.Clipboard.name}`;
         try {  
