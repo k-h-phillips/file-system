@@ -21,10 +21,12 @@ namespace TestProject.Controllers
     {
 
         private readonly string _homePath;
+        private readonly ILogger<FileSystemController> _logger;
 
-        public FileSystemController(IConfiguration configuration)
+        public FileSystemController(IConfiguration configuration, ILogger<FileSystemController> logger)
         {
             _homePath = configuration["FileSystem:Home"];
+            _logger = logger;
         }
         
         /// <summary>
@@ -63,13 +65,22 @@ namespace TestProject.Controllers
             }
 
             // Get folders first, then files, to mimic standard file explorers.
-            List<object> children = new() { };
-            IEnumerable<string> folders = Directory.EnumerateDirectories(fullPath, "*", SearchOption.TopDirectoryOnly);
+            List<object> children = new() {};
+            IEnumerable<string> folders;
+            try
+            {
+                folders = Directory.EnumerateDirectories(fullPath, "*", SearchOption.TopDirectoryOnly);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                _logger.LogWarning("Access denied to folder: {folder}", fullPath);
+                return Forbid("Access denied to the specified path");
+            }
             foreach (string folder in folders)
             {
-                DirectoryInfo directoryInfo = new(folder);
                 try
                 {
+                    DirectoryInfo directoryInfo = new(folder);
                     children.Add(new Folder()
                     {
                         Name = directoryInfo.Name,
@@ -77,9 +88,10 @@ namespace TestProject.Controllers
                         LastModified = directoryInfo.LastWriteTime,
                         ItemCount = Directory.GetFileSystemEntries(folder).Length,
                     });
-                } catch (System.UnauthorizedAccessException)
+                }
+                catch (UnauthorizedAccessException)
                 {
-                    continue;
+                    _logger.LogWarning("Access denied to folder: {folder}", folder);
                 }
             }
 
@@ -513,7 +525,6 @@ namespace TestProject.Controllers
                 yield break;
             }
 
-
             // Initialize a queue to enable recursive directory search.
             // Each time a directory is encountered, it is added to the queue so that its contents
             // will be searched later in the algorithm.
@@ -558,7 +569,13 @@ namespace TestProject.Controllers
             } 
             catch (UnauthorizedAccessException)
             {
-                files = new List<string>();
+                _logger.LogWarning("Access denied to folder: {folder}", searchPath);
+                yield break;
+            }
+            catch (DirectoryNotFoundException)
+            {
+                _logger.LogWarning("Directory not found: {folder}", searchPath);
+                yield break;
             }
             foreach (string file in files)
             {
@@ -606,7 +623,13 @@ namespace TestProject.Controllers
             }
             catch (UnauthorizedAccessException)
             {
-                directories = new List<string>();
+                _logger.LogWarning("Access denied to folder: {folder}", directoryPath);
+                yield break;
+            }
+            catch (DirectoryNotFoundException)
+            {
+                _logger.LogWarning("Directory not found: {folder}", directoryPath);
+                yield break;
             }
             foreach (string folder in directories)
             {
@@ -616,12 +639,22 @@ namespace TestProject.Controllers
                 if (MatchesPattern(Path.GetFileName(folder), pattern))
                 {
                     DirectoryInfo directoryInfo = new(folder);
+                    int itemCount;
+                    try
+                    {
+                        itemCount = Directory.GetFileSystemEntries(folder).Length;
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        _logger.LogWarning("Access denied to folder: {folder}", folder);
+                        itemCount = 0;
+                    }
                     yield return new
                     {
                         directoryInfo.Name,
                         FullPath = Path.GetFullPath(folder)[_homePath.Length..],
                         LastModified = directoryInfo.LastWriteTime,
-                        ItemCount = Directory.GetFileSystemEntries(folder).Length,
+                        ItemCount = itemCount,
                     };
                 }
 
